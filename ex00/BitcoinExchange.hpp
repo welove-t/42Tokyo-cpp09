@@ -2,6 +2,10 @@
 #define BITCOINEXCHANGE_HPP
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <map>
 
 #define RED		"\e[0;31m" // Red
 #define GREEN	"\e[0;32m" // Green
@@ -12,6 +16,7 @@
 class BitcoinExchange
 {
 	private:
+		std::map<std::string, double> _mapExchangeRates;
 
 	public:
 		BitcoinExchange();
@@ -20,10 +25,9 @@ class BitcoinExchange
 		BitcoinExchange(const BitcoinExchange& rhs);
 		BitcoinExchange& operator=(const BitcoinExchange& rhs);
 
-		void	addNumber(int value);
-		void	addNumber(int value, int num);
-		int		shortestSpan();
-		int		longestSpan();
+		std::map<std::string, double> getMapExchangeRates(void) const;
+
+		void	readDataCSV(void);
 
 };
 

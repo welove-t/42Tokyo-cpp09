@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <stdexcept>
 #include <map>
 
 #define RED		"\e[0;31m" // Red
@@ -34,6 +35,7 @@ class BitcoinExchange
 		void	printBitcoin(std::string date, double rate);
 		double	getRate(std::string date);
 
+		bool	is_validate_rate(const std::string& rateStr, double *rate);
 };
 
 

@@ -84,7 +84,9 @@ void	BitcoinExchange::readDataTXT(const std::string& fileName)
 
         std::getline(lineStream, date, '|'); // 日付を読む
         std::getline(lineStream, rateStr);   // 為替レートを読む
-        std::istringstream(rateStr) >> rate; // 為替レートをdoubleに変換
+
+        if (!is_validate_rate(rateStr, &rate))
+            continue;
         printBitcoin(date, rate);
     }
     file.close();
@@ -92,8 +94,12 @@ void	BitcoinExchange::readDataTXT(const std::string& fileName)
 
 void	BitcoinExchange::printBitcoin(std::string date, double rate)
 {
-    double anserRate = rate * getRate(date);
-    std::cout << date << " => " << anserRate << std::endl;
+    double dbRate = getRate(date);
+
+    if (dbRate < 0)
+        return ;
+    dbRate *= rate;
+    std::cout << date << " => " << dbRate << std::endl;
 }
 
 double	BitcoinExchange::getRate(std::string date)
@@ -106,7 +112,27 @@ double	BitcoinExchange::getRate(std::string date)
         std::cout << "No available rate for the given date or earlier.\n";
         return -1.0;  // ここで適当なエラー値を返しています。
     }
-
     --it;  // 直近の日付の要素を指すようにします。
     return it->second;  // その日付の為替レートを返します。
 }
+
+bool	BitcoinExchange::is_validate_rate(const std::string& rateStr, double *rate)
+{
+    std::istringstream iss(rateStr);
+
+    try
+    {
+        if (!(iss >> *rate))             // 為替レートをdoubleに変換
+            throw std::logic_error("not a number");
+        if (*rate < 0)
+            throw std::logic_error("not a positive number.");
+    }
+    catch (std::logic_error &e)
+    {
+        std::cerr << RED <<"Error: " << e.what() << RESET << std::endl;
+        return false;
+    }
+    return true;
+}
+
+

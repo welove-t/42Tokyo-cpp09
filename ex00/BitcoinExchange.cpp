@@ -22,7 +22,7 @@ BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& rhs)
 	std::cout << "(BitcoinExchange) Copy assignment operator called" << std::endl;
 	if (this == &rhs)
 		return *this;
-
+	_mapExchangeRates = rhs._mapExchangeRates;
 	return *this;
 }
 

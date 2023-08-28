@@ -6,10 +6,11 @@ BitcoinExchange::BitcoinExchange()
 	std::cout << "(BitcoinExchange) Default Constructor called" << std::endl;
 }
 
-// BitcoinExchange::BitcoinExchange(const BitcoinExchange& rhs)
-// {
-// 	std::cout << "(BitcoinExchange) Copy Constructor called"  << std::endl;
-// }
+BitcoinExchange::BitcoinExchange(const BitcoinExchange& rhs)
+: _mapExchangeRates(rhs._mapExchangeRates)
+{
+	std::cout << "(BitcoinExchange) Copy Constructor called"  << std::endl;
+}
 
 BitcoinExchange::~BitcoinExchange()
 {

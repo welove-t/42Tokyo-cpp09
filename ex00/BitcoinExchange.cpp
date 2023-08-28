@@ -92,6 +92,21 @@ void	BitcoinExchange::readDataTXT(const std::string& fileName)
 
 void	BitcoinExchange::printBitcoin(std::string date, double rate)
 {
+    double anserRate = rate * getRate(date);
+    std::cout << date << " => " << anserRate << std::endl;
+}
 
-    std::cout << date << " => " << rate << std::endl;
+double	BitcoinExchange::getRate(std::string date)
+{
+    std::map<std::string, double>::const_iterator it = _mapExchangeRates.upper_bound(date);
+    // upper_bound は指定したキーよりも大きい最初の要素を返します。
+    // なので、その1つ前が指定された日付またはそれに最も近い日付です。
+    if (it == _mapExchangeRates.begin()) {
+        // 指定された日付より前のデータが一つもない場合はエラー（または適当な値）を返します。
+        std::cout << "No available rate for the given date or earlier.\n";
+        return -1.0;  // ここで適当なエラー値を返しています。
+    }
+
+    --it;  // 直近の日付の要素を指すようにします。
+    return it->second;  // その日付の為替レートを返します。
 }

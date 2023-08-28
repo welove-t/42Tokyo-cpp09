@@ -32,6 +32,7 @@ class BitcoinExchange
 		void	readDataTXT(const std::string& fileName);
 		bool	checkOpenFile(std::ifstream& input) const;
 		void	printBitcoin(std::string date, double rate);
+		double	getRate(std::string date);
 
 };
 

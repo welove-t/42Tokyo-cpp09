@@ -77,6 +77,8 @@ void	BitcoinExchange::readDataTXT(const std::string& fileName)
 
     while (std::getline(file, line))
     {
+        if (line.empty())
+            continue;
         std::istringstream lineStream(line);
         std::string date;
         std::string rateStr;
@@ -84,7 +86,11 @@ void	BitcoinExchange::readDataTXT(const std::string& fileName)
 
         std::getline(lineStream, date, '|'); // 日付を読む
         std::getline(lineStream, rateStr);   // 為替レートを読む
-
+        if (!isValidDate(date))
+        {
+            std::cout << RED << "Error: bad input => " << date << RESET << std::endl;
+            continue;
+        }
         if (!is_validate_rate(rateStr, &rate))
             continue;
         printBitcoin(date, rate);
@@ -116,6 +122,33 @@ double	BitcoinExchange::getRate(std::string date)
     return it->second;  // その日付の為替レートを返します。
 }
 
+bool BitcoinExchange::isLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+bool	BitcoinExchange::isValidDate(const std::string& date)
+{
+    if (date.size() != 11 || date[4] != '-' || date[7] != '-')
+        return false;
+
+    int year, month, day;
+    std::istringstream issYear(date.substr(0, 4));
+    std::istringstream issMonth(date.substr(5, 2));
+    std::istringstream issDay(date.substr(8, 2));
+
+    issYear >> year;
+    issMonth >> month;
+    issDay >> day;
+
+    int daysInMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (isLeapYear(year))
+        daysInMonth[2] = 29;
+    if (day > daysInMonth[month])
+        return false;
+    return true;
+}
+
 bool	BitcoinExchange::is_validate_rate(const std::string& rateStr, double *rate)
 {
     std::istringstream iss(rateStr);
@@ -126,6 +159,8 @@ bool	BitcoinExchange::is_validate_rate(const std::string& rateStr, double *rate)
             throw std::logic_error("not a number");
         if (*rate < 0)
             throw std::logic_error("not a positive number.");
+        if (*rate > 1000)
+            throw std::logic_error("too large a number.");
     }
     catch (std::logic_error &e)
     {

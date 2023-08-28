@@ -35,6 +35,8 @@ class BitcoinExchange
 		void	printBitcoin(std::string date, double rate);
 		double	getRate(std::string date);
 
+		bool	isValidDate(const std::string& date);
+		bool	isLeapYear(int year);
 		bool	is_validate_rate(const std::string& rateStr, double *rate);
 };
 

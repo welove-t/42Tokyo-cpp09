@@ -26,8 +26,12 @@ class BitcoinExchange
 		BitcoinExchange& operator=(const BitcoinExchange& rhs);
 
 		std::map<std::string, double> getMapExchangeRates(void) const;
+		std::map<std::string, double> getMapInputData(void) const;
 
 		void	readDataCSV(void);
+		void	readDataTXT(const std::string& fileName);
+		bool	checkOpenFile(std::ifstream& input) const;
+		void	printBitcoin(std::string date, double rate);
 
 };
 

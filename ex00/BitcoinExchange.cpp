@@ -101,7 +101,7 @@ void	BitcoinExchange::readDataTXT(const std::string& fileName)
 		std::getline(lineStream, rateStr);   // 為替レートを読む
 		if (!isValidDate(date))
 			continue;
-		if (!is_validate_rate(rateStr, &rate))
+		if (!isValidRate(rateStr, &rate))
 			continue;
 		printBitcoin(date, rateStr, rate);
 	}
@@ -132,7 +132,7 @@ double	BitcoinExchange::getRate(std::string date)
 	return it->second;  // その日付の為替レートを返します。
 }
 
-bool	BitcoinExchange::isValidLine(const std::string& line)
+bool	BitcoinExchange::isValidLine(const std::string& line) const
 {
 	try
 	{
@@ -149,18 +149,30 @@ bool	BitcoinExchange::isValidLine(const std::string& line)
 	return true;
 }
 
-bool BitcoinExchange::isLeapYear(int year)
+bool BitcoinExchange::isLeapYear(int year) const
 {
 	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 
-bool	BitcoinExchange::isValidDate(const std::string& date)
+bool	BitcoinExchange::isValidDate(const std::string& date) const
 {
 	try
 	{
-		if (date.size() != 11 || date[4] != '-' || date[7] != '-')
+		if (date.size() != 11)
 			throw std::logic_error("bad input => " + date);
-
+		for (int i = 0; i < 10; i++)
+		{
+			if (i == 4 || i == 7)
+			{
+				if (date[i] != '-' || date[i] != '-')
+					throw std::logic_error("bad input => " + date);
+			}
+			else
+			{
+				if (!std::isdigit(date[i]))
+					throw std::logic_error("bad input => " + date);
+			}
+		}
 		int year, month, day;
 		std::istringstream issYear(date.substr(0, 4));
 		std::istringstream issMonth(date.substr(5, 2));
@@ -184,7 +196,7 @@ bool	BitcoinExchange::isValidDate(const std::string& date)
 	return true;
 }
 
-bool	BitcoinExchange::is_validate_rate(const std::string& rateStr, double *rate)
+bool	BitcoinExchange::isValidRate(const std::string& rateStr, double *rate) const
 {
 	std::istringstream iss(rateStr);
 

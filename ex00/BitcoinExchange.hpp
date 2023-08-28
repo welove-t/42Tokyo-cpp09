@@ -36,10 +36,10 @@ class BitcoinExchange
 		double	getRate(std::string date);
 
 		bool	isOpenFile(std::ifstream& input, const std::string& fileName) const;
-		bool	isValidLine(const std::string& line);
-		bool	isValidDate(const std::string& date);
-		bool	isLeapYear(int year);
-		bool	is_validate_rate(const std::string& rateStr, double *rate);
+		bool	isValidLine(const std::string& line) const;
+		bool	isValidDate(const std::string& date) const;
+		bool	isLeapYear(int year) const;
+		bool	isValidRate(const std::string& rateStr, double *rate) const;
 };
 
 

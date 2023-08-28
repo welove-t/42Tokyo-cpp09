@@ -31,10 +31,11 @@ class BitcoinExchange
 
 		void	readDataCSV(void);
 		void	readDataTXT(const std::string& fileName);
-		bool	checkOpenFile(std::ifstream& input) const;
 		void	printBitcoin(std::string date, double rate);
 		double	getRate(std::string date);
 
+		bool	isOpenFile(std::ifstream& input) const;
+		bool	isValidLine(const std::string& line);
 		bool	isValidDate(const std::string& date);
 		bool	isLeapYear(int year);
 		bool	is_validate_rate(const std::string& rateStr, double *rate);

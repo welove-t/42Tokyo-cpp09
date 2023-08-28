@@ -33,9 +33,9 @@ std::map<std::string, double> BitcoinExchange::getMapExchangeRates(void) const
 /* Function */
 void	BitcoinExchange::readDataCSV(void)
 {
-   std::ifstream file("data.csv"); // CSVファイルを開く
+   std::ifstream file(csvFileName); // CSVファイルを開く
 
-	if (!isOpenFile(file))
+	if (!isOpenFile(file, csvFileName))
 		return ;
 	std::string line;
 	std::getline(file, line); // ヘッダ行をスキップ
@@ -57,29 +57,34 @@ void	BitcoinExchange::readDataCSV(void)
 	file.close();
 }
 
-bool	BitcoinExchange::isOpenFile(std::ifstream& input) const
+bool	BitcoinExchange::isOpenFile(std::ifstream& input , const std::string& fileName) const
 {
 	if (!input.is_open()) {
 		std::cerr << RED << "Failed to open " << RESET << std::endl;
 		return false;
 	}
 	// ファイルサイズを取得
-    std::ifstream::pos_type fileSize = input.tellg();
+	std::ifstream bigFile(fileName, std::ifstream::ate | std::ifstream::binary);
+    std::ifstream::pos_type fileSize = bigFile.tellg();
+
 	// サイズが一定の閾値より大きい場合はエラーとする
     const std::ifstream::pos_type maxSize = 10000000; // 10MGとする
     if (fileSize > maxSize) {
-        std::cerr << RED << "File is too large!" << std::endl;
+        std::cerr << RED << fileName << " is too large!" << RESET << std::endl;
 		input.close();
+		bigFile.close();
         return false;
     }
+	bigFile.close();
 	return true;
 }
+
 
 void	BitcoinExchange::readDataTXT(const std::string& fileName)
 {
    std::ifstream file(fileName); // TXTファイルを開く
 
-	if (!isOpenFile(file))
+	if (!isOpenFile(file, fileName))
 		return ;
 	std::string line;
 	std::getline(file, line); // ヘッダ行をスキップ
@@ -92,26 +97,25 @@ void	BitcoinExchange::readDataTXT(const std::string& fileName)
 		std::string date;
 		std::string rateStr;
 		double rate;
-
 		std::getline(lineStream, date, '|'); // 日付を読む
 		std::getline(lineStream, rateStr);   // 為替レートを読む
 		if (!isValidDate(date))
 			continue;
 		if (!is_validate_rate(rateStr, &rate))
 			continue;
-		printBitcoin(date, rate);
+		printBitcoin(date, rateStr, rate);
 	}
 	file.close();
 }
 
-void	BitcoinExchange::printBitcoin(std::string date, double rate)
+void	BitcoinExchange::printBitcoin(const std::string& date, const std::string& rateStr, double rate)
 {
 	double dbRate = getRate(date);
 
 	if (dbRate < 0)
 		return ;
 	dbRate *= rate;
-	std::cout << date << " => " << dbRate << std::endl;
+	std::cout << date << " => " << rateStr << " = " << dbRate << std::endl;
 }
 
 double	BitcoinExchange::getRate(std::string date)
@@ -121,7 +125,7 @@ double	BitcoinExchange::getRate(std::string date)
 	// なので、その1つ前が指定された日付またはそれに最も近い日付です。
 	if (it == _mapExchangeRates.begin()) {
 		// 指定された日付より前のデータが一つもない場合はエラー（または適当な値）を返します。
-		std::cout << "No available rate for the given date or earlier.\n";
+		std::cout << RED << "Error: no available rate for the given date or earlier." << RESET << std::endl;
 		return -1.0;  // ここで適当なエラー値を返しています。
 	}
 	--it;  // 直近の日付の要素を指すようにします。

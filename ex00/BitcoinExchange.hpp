@@ -14,6 +14,7 @@
 #define BLUE	"\e[0;34m" // Blue
 #define RESET 	"\e[0m"    // Reset
 
+const std::string csvFileName = "data.csv";
 class BitcoinExchange
 {
 	private:
@@ -31,10 +32,10 @@ class BitcoinExchange
 
 		void	readDataCSV(void);
 		void	readDataTXT(const std::string& fileName);
-		void	printBitcoin(std::string date, double rate);
+		void	printBitcoin(const std::string& date, const std::string& rateStr, double rate);
 		double	getRate(std::string date);
 
-		bool	isOpenFile(std::ifstream& input) const;
+		bool	isOpenFile(std::ifstream& input, const std::string& fileName) const;
 		bool	isValidLine(const std::string& line);
 		bool	isValidDate(const std::string& date);
 		bool	isLeapYear(int year);

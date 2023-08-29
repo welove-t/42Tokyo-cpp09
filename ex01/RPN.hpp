@@ -26,6 +26,10 @@ class RPN
 		RPN(const RPN& rhs);
 		RPN& operator=(const RPN& rhs);
 
+		int		calcRPN(const std::string& strRPN);
+		void	processCharOperation(const std::string& token);
+		void	processNum(const std::string& token);
+
 };
 
 

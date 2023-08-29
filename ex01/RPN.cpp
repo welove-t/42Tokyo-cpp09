@@ -70,7 +70,12 @@ void	RPN::processNum(const std::string& token)
 	std::istringstream issToken(token);
 	int num;
 	if (issToken >> num)
+	{
+		if (num >= 10)
+			throw std::logic_error("Error: over 9 => " + token);
 		_stk.push(num);
+
+	}
 	else
 		throw std::logic_error("Error: invalid token " + token);
 }

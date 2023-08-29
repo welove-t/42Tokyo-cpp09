@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 	catch(const std::logic_error& e)
 	{
 		std::cerr << RED << e.what() << RESET << std::endl;
+		return 1;
 	}
 
 	return 0;

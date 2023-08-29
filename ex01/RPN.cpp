@@ -28,6 +28,9 @@ RPN& RPN::operator=(const RPN& rhs)
 /* Function */
 int	RPN::calcRPN(const std::string& strRPN)
 {
+	if (strRPN.size() > 100000)
+		throw std::logic_error("Error: Too many input argv[1]");
+
 	std::istringstream iss(strRPN);
 	std::string token;
 

@@ -8,8 +8,16 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	RPN r;
-	std::cout << r.calcRPN(argv[1]) << std::endl;
+	try
+	{
+		RPN r;
+		std::cout << r.calcRPN(argv[1]) << std::endl;
+	}
+	catch(const std::logic_error& e)
+	{
+		std::cerr << RED << e.what() << RESET << std::endl;
+	}
+
 	return 0;
 }
 

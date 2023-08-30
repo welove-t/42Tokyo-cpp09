@@ -2,11 +2,9 @@
 #define PMERGEME_HPP
 
 #include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <stdexcept>
-#include <stack>
+#include <vector>
+#include <algorithm>
+#include <cstdlib>
 
 #define RED		"\e[0;31m" // Red
 #define GREEN	"\e[0;32m" // Green
@@ -17,7 +15,7 @@
 class PmergeMe
 {
 	private:
-		std::stack<int> _stk;
+		// std::stack<int> _stk;
 
 	public:
 		PmergeMe();
@@ -25,6 +23,8 @@ class PmergeMe
 
 		PmergeMe(const PmergeMe& rhs);
 		PmergeMe& operator=(const PmergeMe& rhs);
+
+		void mergeInsertionSort(std::vector<int>& arr);
 
 };
 

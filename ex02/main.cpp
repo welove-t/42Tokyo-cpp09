@@ -1,5 +1,9 @@
 #include "PmergeMe.hpp"
 
+#ifdef DEBUG
+int comparisonCount = 0;
+#endif
+
 int main(int argc, char* argv[]) {
     std::vector<int> arr;
 
@@ -7,20 +11,31 @@ int main(int argc, char* argv[]) {
         arr.push_back(std::atoi(argv[i]));
     }
 
-    std::cout << "Before: ";
+    std::cout << "Before:\t";
     for (size_t i = 0; i < arr.size(); ++i) {
         std::cout << arr[i] << " ";
     }
     std::cout << std::endl;
 
 	PmergeMe p;
+    std::clock_t start = std::clock();
     p.mergeInsertionSort(arr);
+    std::clock_t end = std::clock();
+    double elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
 
-    std::cout << "After:  ";
+
+    std::cout << "After:\t";
     for (size_t i = 0; i < arr.size(); ++i) {
         std::cout << arr[i] << " ";
     }
     std::cout << std::endl;
+
+    std::cout << "Time to process a range of 5 elements with std::vector : "  <<
+    std::fixed << std::setprecision(6) << elapsed_time << " sec"
+    #ifdef DEBUG
+        << " | comparisonCount: " <<  comparisonCount
+    #endif
+    << std::endl;
 
     return 0;
 }

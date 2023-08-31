@@ -6,8 +6,11 @@ FILES		= main PmergeMe
 SRCS		= $(FILES:=.cpp)
 OBJS_DIR	= .objs
 OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS:.cpp=.o))
+DEBUGFLAGS	= -DDEBUG -g
 
 all: $(NAME)
+debug: CXXFLAGS += $(DEBUGFLAGS)
+debug: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)

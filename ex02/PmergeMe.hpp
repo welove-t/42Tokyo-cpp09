@@ -2,9 +2,12 @@
 #define PMERGEME_HPP
 
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <algorithm>
 #include <cstdlib>
+#include <ctime>
+#include <cmath>
 
 #define RED		"\e[0;31m" // Red
 #define GREEN	"\e[0;32m" // Green
@@ -12,6 +15,9 @@
 #define BLUE	"\e[0;34m" // Blue
 #define RESET 	"\e[0m"    // Reset
 
+#ifdef DEBUG
+extern int comparisonCount;
+#endif
 class PmergeMe
 {
 	private:

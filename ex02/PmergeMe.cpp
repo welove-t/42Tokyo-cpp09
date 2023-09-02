@@ -30,6 +30,9 @@ void PmergeMe::mergeInsertionSort(std::vector<int>& arr)
 {
     size_t n = arr.size();
     if (n <= 1) return;
+    #ifdef DEBUG
+        comparisonCount ++;
+    #endif
 
     std::vector<int> larger, smaller;
 
@@ -38,7 +41,7 @@ void PmergeMe::mergeInsertionSort(std::vector<int>& arr)
         if (i + 1 < n)
         {
             #ifdef DEBUG
-            comparisonCount++;
+                comparisonCount++;
             #endif
             larger.push_back(std::max(arr[i], arr[i + 1]));
             smaller.push_back(std::min(arr[i], arr[i + 1]));
@@ -55,9 +58,6 @@ void PmergeMe::mergeInsertionSort(std::vector<int>& arr)
     int corresponding_smaller = -1;
     for (size_t i = 0; i < n; i += 2) {
         if (i + 1 < n) {
-            #ifdef DEBUG
-                comparisonCount += 2;
-            #endif
             if (arr[i] == smallest_larger || arr[i + 1] == smallest_larger) {
                 corresponding_smaller = std::min(arr[i], arr[i + 1]);
                 break;
@@ -95,3 +95,4 @@ void PmergeMe::mergeInsertionSort(std::vector<int>& arr)
 	// std::cout << BLUE << corresponding_smaller << RESET << std::endl;
     // Insert the corresponding smaller element if it exists
 //./PmergeMe 9 3 7 4 8 2 6 5
+//./PmergeMe 8 1 6 3 7 2 5 4   (最悪ケース？)

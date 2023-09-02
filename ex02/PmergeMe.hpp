@@ -30,7 +30,8 @@ class PmergeMe
 		PmergeMe(const PmergeMe& rhs);
 		PmergeMe& operator=(const PmergeMe& rhs);
 
-		void mergeInsertionSort(std::vector<int>& arr);
+		bool	isValid(int argc, char *argv[]);
+		void	mergeInsertionSort(std::vector<int>& arr);
 
 };
 

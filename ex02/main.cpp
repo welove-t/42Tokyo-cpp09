@@ -5,6 +5,11 @@ int comparisonCount = 0;
 #endif
 
 int main(int argc, char* argv[]) {
+
+    PmergeMe p;
+
+    if (p.isValid(argc, argv))
+        return 1;
     std::vector<int> arr;
 
     for (int i = 1; i < argc; ++i) {
@@ -17,7 +22,6 @@ int main(int argc, char* argv[]) {
     }
     std::cout << std::endl;
 
-	PmergeMe p;
     std::clock_t start = std::clock();
     p.mergeInsertionSort(arr);
     std::clock_t end = std::clock();

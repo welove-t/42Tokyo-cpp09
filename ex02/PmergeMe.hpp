@@ -3,11 +3,12 @@
 
 #include <iostream>
 #include <iomanip>
-#include <vector>
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
+#include <vector>
+#include <list>
 
 #define RED		"\e[0;31m" // Red
 #define GREEN	"\e[0;32m" // Green
@@ -32,6 +33,7 @@ class PmergeMe
 
 		bool	isValid(int argc, char *argv[]);
 		void	mergeInsertionSort(std::vector<int>& arr);
+		void	mergeInsertionSort(std::list<int>& arr);
 
 };
 

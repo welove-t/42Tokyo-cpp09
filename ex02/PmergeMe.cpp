@@ -149,6 +149,71 @@ void	PmergeMe::mergeInsertionSort(std::vector<int>& arr)
 	}
 }
 
+void	PmergeMe::mergeInsertionSort(std::list<int>& arr)
+{
+	size_t n = arr.size();
+	if (n <= 1) return;
+	#ifdef DEBUG
+		comparisonCount ++;
+	#endif
+
+	std::list<int> larger, smaller;
+
+	// Step 1 and Step 2: Pairing and finding larger and smaller elements
+    std::list<int>::iterator it = arr.begin();
+    for (size_t i = 0; i < n; i += 2) {
+        if (i + 1 < n)
+        {
+            int first = *it++;
+            int second = *it++;
+            #ifdef DEBUG
+                comparisonCount++;
+            #endif
+            larger.push_back(std::max(first, second));
+            smaller.push_back(std::min(first, second));
+        } else {
+            larger.push_back(*it++);
+        }
+    }
+
+	// Step 3: Recursively sort the larger elements
+	mergeInsertionSort(larger);
+
+	// Step 4: Find the corresponding smaller element for the smallest larger element
+    int smallest_larger = larger.front();
+    int corresponding_smaller = -1;
+    it = arr.begin();
+    for (size_t i = 0; i < n; i += 2) {
+        if (i + 1 < n) {
+            int first = *it++;
+            int second = *it++;
+            if (first == smallest_larger || second == smallest_larger) {
+                corresponding_smaller = std::min(first, second);
+                break;
+            }
+        }
+    }
+
+	// Clear the original array and populate it with sorted larger elements
+	arr.clear();
+	arr = larger;
+
+	if (corresponding_smaller != -1) {
+		arr.push_front(corresponding_smaller);
+	}
+
+	// Step 5: Insert the remaining smaller elements
+    for (std::list<int>::iterator it = smaller.begin(); it != smaller.end(); ++it) {
+        if (*it != corresponding_smaller) {
+            std::list<int>::iterator pos = std::lower_bound(arr.begin(), arr.end(), *it);
+            #ifdef DEBUG
+                comparisonCount += static_cast<int>(std::log(static_cast<double>(arr.size())) / std::log(2.0));
+            #endif
+            arr.insert(pos, *it);
+        }
+    }
+}
+
 
 	// std::cout << "------" << std::endl;
 	// for (std::vector<int>::iterator it = arr.begin(); it != arr.end(); it++)
@@ -157,5 +222,12 @@ void	PmergeMe::mergeInsertionSort(std::vector<int>& arr)
 	// }
 	// std::cout << BLUE << corresponding_smaller << RESET << std::endl;
 	// Insert the corresponding smaller element if it exists
-//./PmergeMe 9 3 7 4 8 2 6 5
-//./PmergeMe 8 1 6 3 7 2 5 4   (最悪ケース？)
+
+/*
+test case
+./PmergeMe 9 3 7 4 8 2 6 5
+./PmergeMe 8 1 6 3 7 2 5 4
+./PmergeMe `jot -r 3000 1 100000 | sort -n | uniq | tr '\n' ' '` > out
+
+*/
+

@@ -67,7 +67,14 @@ bool	PmergeMe::isValid(int argc, char *argv[])
 		}
 
         // 数値に変換
-        int num = std::atoi(arg);
+        long num = std::atol(arg);
+
+		// 整数(正のint)チェック
+		if (num > INT_MAX || num < 0)
+		{
+			std::cerr << RED << "only positive integer sequence as argument." << RESET << std::endl;
+			return true;
+		}
 
         // 重複チェック
         if (isDuplicate(num, numbers, count))
@@ -76,7 +83,7 @@ bool	PmergeMe::isValid(int argc, char *argv[])
             return true;
         }
 
-        numbers[count] = num;
+        numbers[count] = static_cast<int>(num);
         ++count;
 	}
 	return false;

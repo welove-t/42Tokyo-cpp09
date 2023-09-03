@@ -26,17 +26,17 @@ PmergeMe& PmergeMe::operator=(const PmergeMe& rhs)
 }
 
 /* Function */
-bool isDuplicate(int num, int arr[], int size)
+bool	PmergeMe::isDuplicate(int num, int arr[], int size)
 {
-    for (int i = 0; i < size; ++i)
+	for (int i = 0; i < size; ++i)
 	{
-        if (arr[i] == num)
-            return true;
-    }
-    return false;
+		if (arr[i] == num)
+			return true;
+	}
+	return false;
 }
 
-bool	isNumber(char *arg)
+bool	PmergeMe::isNumber(char *arg)
 {
 	for (size_t j = 0; j < std::strlen(arg); ++j)
 	{
@@ -51,40 +51,33 @@ bool	PmergeMe::isValid(int argc, char *argv[])
 	if (argc < 2)
 	{
 		std::cerr << RED << "Usage: " << argv[0] << " [num...]" << RESET << std::endl;
-        return true;
+		return true;
 	}
-	int numbers[argc - 1]; // 重複チェック用
-    int count = 0; // 配列内の有効な要素数
+	int numbers[argc - 1];
+	int count = 0;
 
-    for (int i = 1; i < argc; ++i)
+	for (int i = 1; i < argc; ++i)
 	{
-        char *arg = argv[i];
+		char *arg = argv[i];
 
 		if (isNumber(arg))
 		{
 			std::cerr << RED << "Error: Characters include." << RESET << std::endl;
 			return true;
 		}
-
-        // 数値に変換
-        long num = std::atol(arg);
-
-		// 整数(正のint)チェック
+		long num = std::atol(arg);
 		if (num > INT_MAX || num < 0)
 		{
 			std::cerr << RED << "only positive integer sequence as argument." << RESET << std::endl;
 			return true;
 		}
-
-        // 重複チェック
-        if (isDuplicate(num, numbers, count))
+		if (isDuplicate(num, numbers, count))
 		{
-            std::cerr << RED << "Error: There are duplicate numbers." << RESET << std::endl;
-            return true;
-        }
-
-        numbers[count] = static_cast<int>(num);
-        ++count;
+			std::cerr << RED << "Error: There are duplicate numbers." << RESET << std::endl;
+			return true;
+		}
+		numbers[count] = static_cast<int>(num);
+		++count;
 	}
 	return false;
 }
@@ -100,7 +93,8 @@ void	PmergeMe::mergeInsertionSort(std::vector<int>& arr)
 	std::vector<int> larger, smaller;
 
 	// Step 1 and Step 2: Pairing and finding larger and smaller elements
-	for (size_t i = 0; i < n; i += 2) {
+	for (size_t i = 0; i < n; i += 2)
+	{
 		if (i + 1 < n)
 		{
 			#ifdef DEBUG
@@ -108,42 +102,43 @@ void	PmergeMe::mergeInsertionSort(std::vector<int>& arr)
 			#endif
 			larger.push_back(std::max(arr[i], arr[i + 1]));
 			smaller.push_back(std::min(arr[i], arr[i + 1]));
-		} else {
+		} else
 			larger.push_back(arr[i]);
-		}
 	}
 
 	// Step 3: Recursively sort the larger elements
 	mergeInsertionSort(larger);
 
 	// Step 4: Find the corresponding smaller element for the smallest larger element
-	int smallest_larger = larger[0];
-	int corresponding_smaller = -1;
-	for (size_t i = 0; i < n; i += 2) {
-		if (i + 1 < n) {
-			if (arr[i] == smallest_larger || arr[i + 1] == smallest_larger) {
-				corresponding_smaller = std::min(arr[i], arr[i + 1]);
+	int smallestLarger = larger[0];
+	int correspondingSmaller = -1;
+	for (size_t i = 0; i < n; i += 2)
+	{
+		if (i + 1 < n)
+		{
+			if (arr[i] == smallestLarger || arr[i + 1] == smallestLarger)
+			{
+				correspondingSmaller = std::min(arr[i], arr[i + 1]);
 				break;
 			}
 		}
 	}
 
-	// Clear the original array and populate it with sorted larger elements
 	arr.clear();
 	arr = larger;
 
-	if (corresponding_smaller != -1) {
-		arr.insert(arr.begin(), corresponding_smaller);
-	}
+	if (correspondingSmaller != -1)
+		arr.insert(arr.begin(), correspondingSmaller);
 
 	// Step 5: Insert the remaining smaller elements
-	for (size_t i = 0; i < smaller.size(); ++i) {
-		if (smaller[i] != corresponding_smaller) {
+	for (size_t i = 0; i < smaller.size(); ++i)
+	{
+		if (smaller[i] != correspondingSmaller)
+		{
 			std::vector<int>::iterator it = std::lower_bound(arr.begin(), arr.end(), smaller[i]);
-		#ifdef DEBUG
-			// comparisonCount += std::log2(arr.size());
-			comparisonCount += static_cast<int>(std::log(static_cast<double>(arr.size())) / std::log(2.0));
-		#endif
+			#ifdef DEBUG
+				comparisonCount += static_cast<int>(std::log(static_cast<double>(arr.size())) / std::log(2.0));
+			#endif
 			arr.insert(it, smaller[i]);
 		}
 	}
@@ -160,68 +155,62 @@ void	PmergeMe::mergeInsertionSort(std::list<int>& arr)
 	std::list<int> larger, smaller;
 
 	// Step 1 and Step 2: Pairing and finding larger and smaller elements
-    std::list<int>::iterator it = arr.begin();
-    for (size_t i = 0; i < n; i += 2) {
-        if (i + 1 < n)
-        {
-            int first = *it++;
-            int second = *it++;
-            #ifdef DEBUG
-                comparisonCount++;
-            #endif
-            larger.push_back(std::max(first, second));
-            smaller.push_back(std::min(first, second));
-        } else {
-            larger.push_back(*it++);
-        }
-    }
+	std::list<int>::iterator it = arr.begin();
+	for (size_t i = 0; i < n; i += 2)
+	{
+		if (i + 1 < n)
+		{
+			int first = *it++;
+			int second = *it++;
+			#ifdef DEBUG
+				comparisonCount++;
+			#endif
+			larger.push_back(std::max(first, second));
+			smaller.push_back(std::min(first, second));
+		} else
+			larger.push_back(*it++);
+	}
 
 	// Step 3: Recursively sort the larger elements
 	mergeInsertionSort(larger);
 
 	// Step 4: Find the corresponding smaller element for the smallest larger element
-    int smallest_larger = larger.front();
-    int corresponding_smaller = -1;
-    it = arr.begin();
-    for (size_t i = 0; i < n; i += 2) {
-        if (i + 1 < n) {
-            int first = *it++;
-            int second = *it++;
-            if (first == smallest_larger || second == smallest_larger) {
-                corresponding_smaller = std::min(first, second);
-                break;
-            }
-        }
-    }
+	int smallestLarger = larger.front();
+	int correspondingSmaller = -1;
+	it = arr.begin();
+	for (size_t i = 0; i < n; i += 2)
+	{
+		if (i + 1 < n)
+		{
+			int first = *it++;
+			int second = *it++;
+			if (first == smallestLarger || second == smallestLarger)
+			{
+				correspondingSmaller = std::min(first, second);
+				break;
+			}
+		}
+	}
 
-	// Clear the original array and populate it with sorted larger elements
 	arr.clear();
 	arr = larger;
 
-	if (corresponding_smaller != -1) {
-		arr.push_front(corresponding_smaller);
-	}
+	if (correspondingSmaller != -1)
+		arr.push_front(correspondingSmaller);
 
 	// Step 5: Insert the remaining smaller elements
-    for (std::list<int>::iterator it = smaller.begin(); it != smaller.end(); ++it) {
-        if (*it != corresponding_smaller) {
-            std::list<int>::iterator pos = std::lower_bound(arr.begin(), arr.end(), *it);
-            #ifdef DEBUG
-                comparisonCount += static_cast<int>(std::log(static_cast<double>(arr.size())) / std::log(2.0));
-            #endif
-            arr.insert(pos, *it);
-        }
-    }
+	for (std::list<int>::iterator it = smaller.begin(); it != smaller.end(); ++it)
+	{
+		if (*it != correspondingSmaller)
+		{
+			std::list<int>::iterator pos = std::lower_bound(arr.begin(), arr.end(), *it);
+			#ifdef DEBUG
+				comparisonCount += static_cast<int>(std::log(static_cast<double>(arr.size())) / std::log(2.0));
+			#endif
+			arr.insert(pos, *it);
+		}
+	}
 }
-
-
-	// std::cout << "------" << std::endl;
-	// for (std::vector<int>::iterator it = arr.begin(); it != arr.end(); it++)
-	// {
-	// 	std::cout << GREEN << *it << RESET << std::endl;
-	// }
-	// std::cout << BLUE << corresponding_smaller << RESET << std::endl;
-	// Insert the corresponding smaller element if it exists
 
 /*
 test case

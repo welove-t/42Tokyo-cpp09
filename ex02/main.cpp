@@ -11,15 +11,17 @@ int main(int argc, char* argv[])
 	if (p.isValid(argc, argv))
 		return 1;
 
+	// ----------------------
+	// vector
+	// ----------------------
 	std::vector<int> vec;
 	for (int i = 1; i < argc; ++i) {
 		vec.push_back(std::atoi(argv[i]));
 	}
 
 	std::cout << "Before:\t";
-	for (size_t i = 0; i < vec.size(); ++i) {
+	for (size_t i = 0; i < vec.size(); ++i)
 		std::cout << vec[i] << " ";
-	}
 	std::cout << std::endl;
 
 	std::clock_t start = std::clock();
@@ -27,11 +29,9 @@ int main(int argc, char* argv[])
 	std::clock_t end = std::clock();
 	double elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
 
-
 	std::cout << "After:\t";
-	for (size_t i = 0; i < vec.size(); ++i) {
+	for (size_t i = 0; i < vec.size(); ++i)
 		std::cout << vec[i] << " ";
-	}
 	std::cout << std::endl;
 
 	std::cout << "Time to process a range of " << vec.size() << " elements with std::vector : "  <<
@@ -41,7 +41,12 @@ int main(int argc, char* argv[])
 	#endif
 	<< std::endl;
 
+	// ----------------------
 	// list
+	// ----------------------
+	#ifdef DEBUG
+		comparisonCount = 0;
+	#endif
 	std::list<int> lst;
 	for (int i = 1; i < argc; ++i) {
 		lst.push_back(std::atoi(argv[i]));
@@ -51,16 +56,14 @@ int main(int argc, char* argv[])
 	end = std::clock();
 	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
 
-	std::cout << "After:\t";
-	// for (size_t i = 0; i < lst.size(); ++i) {
-	// 	std::cout << lst[i] << " ";
-	// }
-	for (std::list<int>::iterator it = lst.begin(); it != lst.end(); ++it)
-	{
-		std::cout << *it << " ";
-	}
-	std::cout << std::endl;
-
+	#ifdef DEBUG
+		std::cout << "After:\t";
+		for (std::list<int>::iterator it = lst.begin(); it != lst.end(); ++it)
+		{
+			std::cout << *it << " ";
+		}
+		std::cout << std::endl;
+	#endif
 	std::cout << "Time to process a range of " << lst.size() << " elements with std::list : "  <<
 	std::fixed << std::setprecision(6) << elapsed_time << " sec"
 	#ifdef DEBUG

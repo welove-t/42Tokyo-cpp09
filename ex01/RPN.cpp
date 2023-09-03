@@ -50,7 +50,7 @@ int	RPN::calcRPN(const std::string& strRPN)
 void	RPN::processCharOperation(const std::string& token)
 {
 	if (_stk.size() < 2)
-		throw std::logic_error("Error: insufficient operands for " + token);
+		throw std::logic_error("Error: bad operands for " + token);
 	int operand2 = _stk.top(); _stk.pop();
 	int operand1 = _stk.top(); _stk.pop();
 

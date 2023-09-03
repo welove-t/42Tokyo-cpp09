@@ -10,7 +10,7 @@ DEBUGFLAGS	= -DDEBUG -g
 
 all: $(NAME)
 debug: CXXFLAGS += $(DEBUGFLAGS)
-debug: $(NAME)
+debug: fclean $(NAME)
 
 $(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)

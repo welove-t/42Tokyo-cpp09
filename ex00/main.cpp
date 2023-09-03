@@ -10,19 +10,12 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	b.readDataCSV();
-	// std::map<std::string, double> myCsv = b.getMapExchangeRates();
-	// for (std::map<std::string, double>::iterator it = myCsv.begin();
-	// 		it !=  myCsv.end(); it++)
-	// {
-	// 	std::cout << "Key: " << it->first << ", Value: " << it->second << std::endl;
-	// }
-
 	b.readDataTXT(argv[1]);
 	return 0;
 }
 
 
-__attribute((destructor))
-static void destructor() {
-	system("leaks -q btc");
-}
+// __attribute((destructor))
+// static void destructor() {
+// 	system("leaks -q btc");
+// }

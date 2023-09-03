@@ -3,23 +3,23 @@
 /* Orthodox Canonical Form */
 BitcoinExchange::BitcoinExchange()
 {
-	std::cout << "(BitcoinExchange) Default Constructor called" << std::endl;
+	// std::cout << "(BitcoinExchange) Default Constructor called" << std::endl;
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange& rhs)
 : _mapExchangeRates(rhs._mapExchangeRates)
 {
-	std::cout << "(BitcoinExchange) Copy Constructor called"  << std::endl;
+	// std::cout << "(BitcoinExchange) Copy Constructor called"  << std::endl;
 }
 
 BitcoinExchange::~BitcoinExchange()
 {
-	std::cout << "(BitcoinExchange) Destructor called" << std::endl;
+	// std::cout << "(BitcoinExchange) Destructor called" << std::endl;
 }
 
 BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& rhs)
 {
-	std::cout << "(BitcoinExchange) Copy assignment operator called" << std::endl;
+	// std::cout << "(BitcoinExchange) Copy assignment operator called" << std::endl;
 	if (this == &rhs)
 		return *this;
 	_mapExchangeRates = rhs._mapExchangeRates;
@@ -34,12 +34,12 @@ std::map<std::string, double> BitcoinExchange::getMapExchangeRates(void) const
 /* Function */
 void	BitcoinExchange::readDataCSV(void)
 {
-   std::ifstream file(csvFileName); // CSVファイルを開く
+   std::ifstream file(csvFileName);
 
 	if (!isOpenFile(file, csvFileName))
 		return ;
 	std::string line;
-	std::getline(file, line); // ヘッダ行をスキップ
+	std::getline(file, line); // header skip
 
 	while (std::getline(file, line))
 	{
@@ -48,47 +48,46 @@ void	BitcoinExchange::readDataCSV(void)
 		std::string rateStr;
 		double rate;
 
-		std::getline(lineStream, date, ','); // 日付を読む
-		std::getline(lineStream, rateStr);   // 為替レートを読む
+		std::getline(lineStream, date, ','); // date
+		std::getline(lineStream, rateStr);   // rate
 
-		std::istringstream(rateStr) >> rate; // 為替レートをdoubleに変換
+		std::istringstream(rateStr) >> rate; //
 
-		_mapExchangeRates[date] = rate; // mapに格納
+		_mapExchangeRates[date] = rate; // set map[date] = rate
 	}
 	file.close();
 }
 
 bool	BitcoinExchange::isOpenFile(std::ifstream& input , const std::string& fileName) const
 {
-	if (!input.is_open()) {
+	if (!input.is_open())
+	{
 		std::cerr << RED << "Failed to open " << RESET << std::endl;
 		return false;
 	}
-	// ファイルサイズを取得
-	std::ifstream bigFile(fileName, std::ifstream::ate | std::ifstream::binary);
-    std::ifstream::pos_type fileSize = bigFile.tellg();
 
-	// サイズが一定の閾値より大きい場合はエラーとする
-    const std::ifstream::pos_type maxSize = 10000000; // 10MGとする
-    if (fileSize > maxSize) {
-        std::cerr << RED << fileName << " is too large!" << RESET << std::endl;
+	std::ifstream bigFile(fileName, std::ifstream::ate | std::ifstream::binary);
+	std::ifstream::pos_type fileSize = bigFile.tellg();
+	const std::ifstream::pos_type maxSize = 10000000; // 10MG
+	if (fileSize > maxSize)
+	{
+		std::cerr << RED << fileName << " is too large!" << RESET << std::endl;
 		input.close();
 		bigFile.close();
-        return false;
-    }
+		return false;
+	}
 	bigFile.close();
 	return true;
 }
 
-
 void	BitcoinExchange::readDataTXT(const std::string& fileName)
 {
-   std::ifstream file(fileName); // TXTファイルを開く
+	std::ifstream file(fileName);
 
 	if (!isOpenFile(file, fileName))
 		return ;
 	std::string line;
-	std::getline(file, line); // ヘッダ行をスキップ
+	std::getline(file, line); // header skip
 
 	while (std::getline(file, line))
 	{
@@ -98,8 +97,8 @@ void	BitcoinExchange::readDataTXT(const std::string& fileName)
 		std::string date;
 		std::string rateStr;
 		double rate;
-		std::getline(lineStream, date, '|'); // 日付を読む
-		std::getline(lineStream, rateStr);   // 為替レートを読む
+		std::getline(lineStream, date, '|');	// date
+		std::getline(lineStream, rateStr);		// rate
 		if (!isValidDate(date))
 			continue;
 		if (!isValidRate(rateStr, &rate))
@@ -122,15 +121,12 @@ void	BitcoinExchange::printBitcoin(const std::string& date, const std::string& r
 double	BitcoinExchange::getRate(std::string date)
 {
 	std::map<std::string, double>::const_iterator it = _mapExchangeRates.upper_bound(date);
-	// upper_bound は指定したキーよりも大きい最初の要素を返します。
-	// なので、その1つ前が指定された日付またはそれに最も近い日付です。
 	if (it == _mapExchangeRates.begin()) {
-		// 指定された日付より前のデータが一つもない場合はエラー（または適当な値）を返します。
 		std::cout << RED << "Error: no available rate for the given date or earlier." << RESET << std::endl;
-		return -1.0;  // ここで適当なエラー値を返しています。
+		return -1.0;
 	}
-	--it;  // 直近の日付の要素を指すようにします。
-	return it->second;  // その日付の為替レートを返します。
+	--it;
+	return it->second;
 }
 
 bool	BitcoinExchange::isValidLine(const std::string& line) const
@@ -150,7 +146,7 @@ bool	BitcoinExchange::isValidLine(const std::string& line) const
 	return true;
 }
 
-bool BitcoinExchange::isLeapYear(int year) const
+bool	BitcoinExchange::isLeapYear(int year) const
 {
 	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
@@ -203,7 +199,7 @@ bool	BitcoinExchange::isValidRate(const std::string& rateStr, double *rate) cons
 
 	try
 	{
-		if (!(iss >> *rate))             // 為替レートをdoubleに変換
+		if (!(iss >> *rate))
 			throw std::logic_error("not a number");
 		if (*rate < 0)
 			throw std::logic_error("not a positive number.");
